@@ -107,6 +107,9 @@ SOFTWARE.
 */
 namespace nlohmann
 {
+#ifdef JSON_CONST_GLOBAL_NULL
+	static const void *nulljson();
+#endif
 
 /*!
 @brief unnamed namespace with internal helper functions
@@ -3849,7 +3852,12 @@ class basic_json
         // const operator[] only works for objects
         if (is_object())
         {
-            assert(m_value.object->find(key) != m_value.object->end());
+#ifdef JSON_CONST_GLOBAL_NULL
+			if(m_value.object->find(key) == m_value.object->end())
+				return *(basic_json*)nulljson();
+#else
+			assert(m_value.object->find(key) != m_value.object->end());
+#endif
             return m_value.object->find(key)->second;
         }
 
@@ -4007,7 +4015,12 @@ class basic_json
         // at only works for objects
         if (is_object())
         {
-            assert(m_value.object->find(key) != m_value.object->end());
+#ifdef JSON_CONST_GLOBAL_NULL
+			if(m_value.object->find(key) == m_value.object->end())
+				return *(basic_json*)nulljson();
+#else
+			assert(m_value.object->find(key) != m_value.object->end());
+#endif
             return m_value.object->find(key)->second;
         }
 
@@ -12895,6 +12908,9 @@ basic_json_parser_74:
     }
 
     /// @}
+#ifdef JSON_CONST_GLOBAL_NULL
+	static const void *nulljson() { static const json null; return &null; }
+#endif
 };
 
 /////////////
