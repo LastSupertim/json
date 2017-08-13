@@ -12909,7 +12909,7 @@ basic_json_parser_74:
 
     /// @}
 #ifdef JSON_CONST_GLOBAL_NULL
-	static const void *nulljson() { static const json null; return &null; }
+	static const void *nulljson() { static const basic_json null; return &null; }
 #endif
 };
 
